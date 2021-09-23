@@ -40,6 +40,7 @@ let hiddenCurrentWord = currentWord.map(
 const correctGuessHandler = function () {
   correctGuess = true;
   let pos = currentWord.indexOf(guess);
+  // If the letter appears more than once:
   let pos2 = currentWord.indexOf(guess, 2);
   let pos3 = currentWord.indexOf(guess, 3);
   let pos4 = currentWord.indexOf(guess, 4);
@@ -75,15 +76,9 @@ const correctGuessHandler = function () {
   }
 };
 
-app.get("/", (req, res) => {
-  res.send(hiddenCurrentWord);
-});
-
 app.get("/usersGuess/:guess", (req, res) => {
   const p = req.params;
   guess = p.guess;
-  res.send(`User has guessed the letter: ${guess}`);
-  console.log(guess);
 
   if (currentWord.includes(guess)) {
     console.log("You guessed a correct letter");
@@ -93,6 +88,13 @@ app.get("/usersGuess/:guess", (req, res) => {
     console.log("You guessed the wrong letter. Try again");
     correctGuess = false;
   }
+
+  const printedJson = {
+    correctGuess: correctGuess,
+    currentWord: hiddenCurrentWord,
+  };
+
+  res.send(printedJson);
 });
 
 app.listen(port, () => {
