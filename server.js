@@ -89,12 +89,14 @@ app.get("/usersGuess/:guess", (req, res) => {
     correctGuess = false;
   }
 
+  const hiddenCurrentWordFormatted = hiddenCurrentWord.join(" ");
+
   const printedJson = {
     correctGuess: correctGuess,
-    currentWord: hiddenCurrentWord,
+    currentWord: hiddenCurrentWordFormatted,
   };
 
-  res.send(printedJson);
+  res.json(printedJson);
 });
 
 app.listen(port, () => {
