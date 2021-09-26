@@ -39,40 +39,10 @@ let hiddenCurrentWord = currentWord.map(
 
 const correctGuessHandler = function () {
   correctGuess = true;
-  let pos = currentWord.indexOf(guess);
-  // If the letter appears more than once:
-  let pos2 = currentWord.indexOf(guess, 2);
-  let pos3 = currentWord.indexOf(guess, 3);
-  let pos4 = currentWord.indexOf(guess, 4);
-  let pos5 = currentWord.indexOf(guess, 5);
-  let pos6 = currentWord.indexOf(guess, 6);
-  let pos7 = currentWord.indexOf(guess, 7);
-  let pos8 = currentWord.indexOf(guess, 8);
 
-  // Add guess to pos but in hiddenCurrentWord
-  if (pos !== -1) {
-    hiddenCurrentWord[pos] = guess;
-  }
-  if (pos2 !== -1) {
-    hiddenCurrentWord[pos2] = guess;
-  }
-  if (pos3 !== -1) {
-    hiddenCurrentWord[pos3] = guess;
-  }
-  if (pos4 !== -1) {
-    hiddenCurrentWord[pos4] = guess;
-  }
-  if (pos5 !== -1) {
-    hiddenCurrentWord[pos5] = guess;
-  }
-  if (pos6 !== -1) {
-    hiddenCurrentWord[pos6] = guess;
-  }
-  if (pos7 !== -1) {
-    hiddenCurrentWord[pos7] = guess;
-  }
-  if (pos8 !== -1) {
-    hiddenCurrentWord[pos8] = guess;
+  for (let i = 0; i < 8; i++) {
+    let pos = currentWord.indexOf(guess, i);
+    if (pos !== -1) hiddenCurrentWord[pos] = guess;
   }
 };
 
