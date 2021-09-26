@@ -60,10 +60,12 @@ app.get("/usersGuess/:guess", (req, res) => {
   }
 
   const hiddenCurrentWordFormatted = hiddenCurrentWord.join(" ");
+  const generatedWordFormatted = currentWord.join(" ");
 
   const printedJson = {
     correctGuess: correctGuess,
-    currentWord: hiddenCurrentWordFormatted,
+    generatedWord: generatedWordFormatted,
+    displayedWord: hiddenCurrentWordFormatted,
   };
 
   res.json(printedJson);
