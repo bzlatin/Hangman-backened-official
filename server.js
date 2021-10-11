@@ -38,9 +38,11 @@ let hiddenCurrentWord = currentWord.map(
 );
 
 const correctGuessHandler = function () {
+  // move this to end point
   correctGuess = true;
 
   for (let i = 0; i < 8; i++) {
+    // change to array.length
     let pos = currentWord.indexOf(guess, i);
     if (pos !== -1) hiddenCurrentWord[pos] = guess;
   }
@@ -64,7 +66,7 @@ app.get("/usersGuess/:guess", (req, res) => {
 
   const printedJson = {
     correctGuess: correctGuess,
-    generatedWord: generatedWordFormatted,
+    // generatedWord: generatedWordFormatted,
     displayedWord: hiddenCurrentWordFormatted,
   };
 
