@@ -37,20 +37,18 @@ let hiddenCurrentWord = currentWord.map(
   (index, currentWord) => (currentWord[index] = "_")
 );
 
-const correctGuessHandler = function () {
-  // move this to end point
-  correctGuess = true;
-
-  for (let i = 0; i < 8; i++) {
-    // change to array.length
-    let pos = currentWord.indexOf(guess, i);
-    if (pos !== -1) hiddenCurrentWord[pos] = guess;
-  }
-};
-
 app.get("/usersGuess/:guess", (req, res) => {
   const p = req.params;
   guess = p.guess;
+
+  const correctGuessHandler = function () {
+    correctGuess = true;
+
+    for (let i = 0; i < hiddenCurrentWord.length; i++) {
+      let pos = currentWord.indexOf(guess, i);
+      if (pos !== -1) hiddenCurrentWord[pos] = guess;
+    }
+  };
 
   if (currentWord.includes(guess)) {
     console.log("You guessed a correct letter");
