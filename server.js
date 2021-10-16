@@ -4,8 +4,22 @@ const app = express();
 app.use(express.json());
 
 var cors = require("cors");
-const port = process.env.port || 8080;
 app.use(cors());
+
+const { createServer } = require("http");
+const { Server } = require("socket.io");
+const httpServer = createServer(app);
+
+const io = new Server(httpServer, {
+  cors: {
+    origin: "http://localhost:3000",
+    methods: ["GET", "POST"],
+  },
+});
+
+io.on("connection", (socket) => {
+  console.log(socket.id);
+});
 
 let guess = "";
 let correctGuess = false;
@@ -65,13 +79,12 @@ app.get("/usersGuess/:guess", (req, res) => {
 
   const printedJson = {
     correctGuess: correctGuess,
-    // generatedWord: generatedWordFormatted,
+    generatedWord: generatedWordFormatted, // just for testing for now
     displayedWord: hiddenCurrentWordFormatted,
   };
 
   res.json(printedJson);
 });
 
-app.listen(port, () => {
-  console.log(`Example app listening at http://localhost:${port}`);
-});
+httpServer.listen(8080);
+httpServer.listen(8081);
