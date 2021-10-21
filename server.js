@@ -12,8 +12,10 @@ const httpServer = createServer(app);
 
 const io = new Server(httpServer, {
   cors: {
-    origin: "http://localhost:3000",
+    origin: "http://localhost:8080",
     methods: ["GET", "POST"],
+    credentials: true,
+    transports: ["websocket", "polling"],
   },
 });
 
@@ -87,4 +89,3 @@ app.get("/usersGuess/:guess", (req, res) => {
 });
 
 httpServer.listen(8080);
-httpServer.listen(8081);
