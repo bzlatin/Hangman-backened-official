@@ -20,7 +20,16 @@ const io = new Server(httpServer, {
 });
 
 io.on("connection", (socket) => {
-  console.log(socket.id);
+  console.log(`"User Connected: ${socket.id}`);
+
+  socket.on("new-guess", function (data) {
+    console.log(data);
+    io.emit("new-guess", data);
+  });
+
+  socket.on("disconnect", () => {
+    console.log("User Disconnected", socket.id);
+  });
 });
 
 let guess = "";
@@ -75,13 +84,15 @@ app.get("/usersGuess/:guess", (req, res) => {
     console.log("You guessed the wrong letter. Try again");
     correctGuess = false;
   }
+});
 
+app.get("/usersData", (req, res) => {
   const hiddenCurrentWordFormatted = hiddenCurrentWord.join(" ");
   const generatedWordFormatted = currentWord.join(" ");
 
   const printedJson = {
     correctGuess: correctGuess,
-    generatedWord: generatedWordFormatted, // just for testing for now
+    generatedWord: generatedWordFormatted,
     displayedWord: hiddenCurrentWordFormatted,
   };
 
