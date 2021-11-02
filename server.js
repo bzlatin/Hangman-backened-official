@@ -10,6 +10,8 @@ const { createServer } = require("http");
 const { Server } = require("socket.io");
 const httpServer = createServer(app);
 
+const port = process.env.port || 8080;
+
 const io = new Server(httpServer, {
   cors: {
     origin: "http://localhost:8080",
@@ -24,7 +26,7 @@ io.on("connection", (socket) => {
 
   socket.on("new-guess", function (data) {
     console.log(data);
-    io.emit("new-guess", data);
+    // io.emit("new-guess", data);
   });
 
   socket.on("disconnect", () => {
@@ -49,19 +51,32 @@ const availableWords = [
   "erect",
 ];
 
-// Randomly select a word from the availableWords array
-const randomlyChosenWord = Math.floor(Math.random() * availableWords.length);
+//This is the random word from the array that is to be guessed
+let currentWord = "";
 
-let currentWord = availableWords[randomlyChosenWord];
+//How far you have guessed
+let hiddenCurrentWord = [];
 
-// Convert chosen word to character array
-currentWord = currentWord.split("");
-console.log(currentWord);
+function reInitialize() {
+  currentWord =
+    availableWords[Math.floor(Math.random() * availableWords.length)];
+  currentWord = currentWord.split("");
+  hiddenCurrentWord = currentWord.map(() => "_");
+  console.log(currentWord);
+}
+// // Randomly select a word from the availableWords array
+// const randomlyChosenWord = Math.floor(Math.random() * availableWords.length);
 
-// Replace currentWord array with "_" for each item in array
-let hiddenCurrentWord = currentWord.map(
-  (index, currentWord) => (currentWord[index] = "_")
-);
+// let currentWord = availableWords[randomlyChosenWord];
+
+// // Convert chosen word to character array
+// currentWord = currentWord.split("");
+// console.log(currentWord);
+
+// // Replace currentWord array with "_" for each item in array
+// let hiddenCurrentWord = currentWord.map(
+//   (index, currentWord) => (currentWord[index] = "_")
+// );
 
 app.get("/usersGuess/:guess", (req, res) => {
   const p = req.params;
@@ -84,11 +99,18 @@ app.get("/usersGuess/:guess", (req, res) => {
     console.log("You guessed the wrong letter. Try again");
     correctGuess = false;
   }
+  io.emit("new-guess");
+
+  res.send("done.");
 });
 
 app.get("/usersData", (req, res) => {
   const hiddenCurrentWordFormatted = hiddenCurrentWord.join(" ");
   const generatedWordFormatted = currentWord.join(" ");
+
+  if (hiddenCurrentWordFormatted == generatedWordFormatted) {
+    reInitialize();
+  }
 
   const printedJson = {
     correctGuess: correctGuess,
@@ -99,4 +121,6 @@ app.get("/usersData", (req, res) => {
   res.json(printedJson);
 });
 
-httpServer.listen(8080);
+httpServer.listen(port, () => {
+  reInitialize();
+});
