@@ -1,5 +1,6 @@
 const express = require("express");
 const app = express();
+const port = process.env.port || 8080;
 
 app.use(express.json());
 
@@ -50,12 +51,23 @@ const availableWords = [
 ];
 
 // Randomly select a word from the availableWords array
-const randomlyChosenWord = Math.floor(Math.random() * availableWords.length);
+//const randomlyChosenWord = Math.floor(Math.random() * availableWords.length);
+let randomlyChosenWord = "";
+let hiddenCurrentWord = [];
+function reInitialize() {
+  randomlyChosenWord =
+    availableWords[Math.floor(Math.random() * availableWords.length)];
+  currentWord = availableWords[randomlyChosenWord];
+  currentWord = currentWord.split("");
+  hiddenCurrentWord = currentWord.map(
+    (index, currentWord) => (currentWord[index] = "_")
+  );
+}
 
 let currentWord = availableWords[randomlyChosenWord];
 
 // Convert chosen word to character array
-currentWord = currentWord.split("");
+let currentWord = availableWords[randomlyChosenWord];
 console.log(currentWord);
 
 // Replace currentWord array with "_" for each item in array
@@ -89,7 +101,9 @@ app.get("/usersGuess/:guess", (req, res) => {
 app.get("/usersData", (req, res) => {
   const hiddenCurrentWordFormatted = hiddenCurrentWord.join(" ");
   const generatedWordFormatted = currentWord.join(" ");
-
+  if (hiddenCurrentWordFormatted == generatedWordFormatted) {
+    reInitialize();
+  }
   const printedJson = {
     correctGuess: correctGuess,
     generatedWord: generatedWordFormatted,
@@ -99,4 +113,6 @@ app.get("/usersData", (req, res) => {
   res.json(printedJson);
 });
 
-httpServer.listen(8080);
+httpServer.listen(port, () => {
+  reInitialize();
+});
