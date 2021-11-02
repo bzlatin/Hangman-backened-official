@@ -64,19 +64,6 @@ function reInitialize() {
   hiddenCurrentWord = currentWord.map(() => "_");
   console.log(currentWord);
 }
-// // Randomly select a word from the availableWords array
-// const randomlyChosenWord = Math.floor(Math.random() * availableWords.length);
-
-// let currentWord = availableWords[randomlyChosenWord];
-
-// // Convert chosen word to character array
-// currentWord = currentWord.split("");
-// console.log(currentWord);
-
-// // Replace currentWord array with "_" for each item in array
-// let hiddenCurrentWord = currentWord.map(
-//   (index, currentWord) => (currentWord[index] = "_")
-// );
 
 app.get("/usersGuess/:guess", (req, res) => {
   const p = req.params;
@@ -108,10 +95,6 @@ app.get("/usersData", (req, res) => {
   const hiddenCurrentWordFormatted = hiddenCurrentWord.join(" ");
   const generatedWordFormatted = currentWord.join(" ");
 
-  if (hiddenCurrentWordFormatted == generatedWordFormatted) {
-    reInitialize();
-  }
-
   const printedJson = {
     correctGuess: correctGuess,
     generatedWord: generatedWordFormatted,
@@ -119,6 +102,11 @@ app.get("/usersData", (req, res) => {
   };
 
   res.json(printedJson);
+});
+
+app.get("/newGame", (req, res) => {
+  reInitialize();
+  res.send("New Game");
 });
 
 httpServer.listen(port, () => {
