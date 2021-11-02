@@ -104,7 +104,7 @@ app.get("/usersData", (req, res) => {
   res.json(printedJson);
 });
 
-app.get("/newGame", (req, res) => {
+app.get("/usersData/newGame", (req, res) => {
   reInitialize();
   res.send("New Game");
 });
