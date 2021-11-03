@@ -8,6 +8,7 @@ app.use(cors());
 
 const { createServer } = require("http");
 const { Server } = require("socket.io");
+const { count } = require("console");
 const httpServer = createServer(app);
 
 const port = process.env.port || 8080;
@@ -65,6 +66,8 @@ function reInitialize() {
   console.log(currentWord);
 }
 
+let counter = 0;
+
 app.get("/usersGuess/:guess", (req, res) => {
   const p = req.params;
   guess = p.guess;
@@ -82,9 +85,13 @@ app.get("/usersGuess/:guess", (req, res) => {
     console.log("You guessed a correct letter");
     correctGuessHandler();
     console.log(hiddenCurrentWord);
-  } else {
+  } else if (!currentWord.includes(guess) && counter < 8) {
+    counter++;
+    console.log(counter);
     console.log("You guessed the wrong letter. Try again");
     correctGuess = false;
+  } else {
+    reInitialize();
   }
   io.emit("new-guess");
 
