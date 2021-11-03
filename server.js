@@ -58,15 +58,18 @@ let currentWord = "";
 //How far you have guessed
 let hiddenCurrentWord = [];
 
+let counter = 0;
+let numberOfLives = 8;
+
 function reInitialize() {
   currentWord =
     availableWords[Math.floor(Math.random() * availableWords.length)];
   currentWord = currentWord.split("");
   hiddenCurrentWord = currentWord.map(() => "_");
   console.log(currentWord);
+  numberOfLives = 8;
+  counter = 0;
 }
-
-let counter = 0;
 
 app.get("/usersGuess/:guess", (req, res) => {
   const p = req.params;
@@ -93,6 +96,10 @@ app.get("/usersGuess/:guess", (req, res) => {
   } else {
     reInitialize();
   }
+
+  numberOfLives = 8 - counter;
+  console.log(numberOfLives);
+
   io.emit("new-guess");
 
   res.send("done.");
@@ -106,6 +113,7 @@ app.get("/usersData", (req, res) => {
     correctGuess: correctGuess,
     generatedWord: generatedWordFormatted,
     displayedWord: hiddenCurrentWordFormatted,
+    numberOfLives: numberOfLives,
   };
 
   res.json(printedJson);
